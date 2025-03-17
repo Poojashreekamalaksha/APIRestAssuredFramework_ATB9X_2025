@@ -3,6 +3,7 @@ package com.thetestingacademy.base;
 import com.thetestingacademy.asserts.AssertActions;
 import com.thetestingacademy.endpoints.APIConstants;
 import com.thetestingacademy.modules.PayloadManager;
+import com.thetestingacademy.pojos.TokenResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -41,4 +42,17 @@ public class BaseTest {
                .log().all();
 
     }
+
+    public String getToken()
+    {
+        rs=RestAssured
+                .given()
+                .baseUri(APIConstants.BASE_URL)
+                .basePath(APIConstants.AUTH_URL);
+       String payload= pm.setAuthPayload();
+       r=rs.contentType(ContentType.JSON).body(payload).when().post();
+        String token = pm.getTokenFromJSON(r.asString());
+        return token;
+    }
+
 }
